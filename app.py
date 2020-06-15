@@ -215,7 +215,7 @@ def update_bar_plot(Country):
     ])
 def update_x_timeseries(c):   
     return get_country_timeseries(covid_df,count_col=c)
-
+'''
 if __name__ != "__main__":
     app.config.update({
         'routes_pathname_prefix': '/',
@@ -226,3 +226,6 @@ if __name__ != "__main__":
 
 if __name__ == '__main__':
     app.run_server(debug=True,port=5000,host='0.0.0.0')
+'''
+if __name__ == '__main__':
+    app.run_server(debug=True,port=5000,host='127.0.0.1')

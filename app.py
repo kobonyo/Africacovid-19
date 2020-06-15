@@ -36,6 +36,7 @@ external_stylesheets = [
 ]
 
 app = dash.Dash(__name__,external_stylesheets=external_stylesheets)
+server = app.server
 
 app.index_string = open('index.html', 'r').read()
 
@@ -48,7 +49,6 @@ try:
 except:
     print('download kaggle auth to ~/.kaggle.json')
 '''
-
 
 covid_df = pd.read_csv('./data/covid_19_clean_complete.csv')
 pop_df = pd.read_csv('./data/macro_corona_data.csv')
@@ -216,5 +216,13 @@ def update_bar_plot(Country):
 def update_x_timeseries(c):   
     return get_country_timeseries(covid_df,count_col=c)
 
+if __name__ != "__main__":
+    app.config.update({
+        'routes_pathname_prefix': '/',
+        'requests_pathname_prefix': '/dev/'
+    })
+    app.css.config.serve_locally = False
+    app.scripts.config.serve_locally = False
+
 if __name__ == '__main__':
-    app.run_server(debug=True,port=8000)
+    app.run_server(debug=True,port=5000,host='0.0.0.0')

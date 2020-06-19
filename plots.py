@@ -70,14 +70,23 @@ def get_map_plot(covid_df, count_col='Confirmed'):
 
 def get_country_timeseries(covid_df, count_col='Algeria'):
     df = covid_df[covid_df['Country'] == count_col]    
-    trace1 = go.Scatter(x = df['Date'],  y = df.Confirmed.values, name='Confirmed',mode='lines+markers')
-    trace2 = go.Scatter(x = df['Date'],  y = df.Deaths.values,     name='Dead',mode='lines+markers')
-    trace3 = go.Scatter(x =df['Date'],  y = df.Recovered.values, name='Recovered',mode='lines+markers')
-    trace4 = go.Scatter(x = df['Date'], y = df.Active.values,   name='Active',mode='lines+markers')
+    trace1 = go.Scatter(x = df['Date'],  y = df.Confirmed.values, name='Confirmed')
+    trace2 = go.Scatter(x = df['Date'],  y = df.Deaths.values,     name='Dead')
+    trace3 = go.Scatter(x =df['Date'],  y = df.Recovered.values, name='Recovered')
+    trace4 = go.Scatter(x = df['Date'], y = df.Active.values,   name='Active')
 
     fig = go.Figure(data=[trace1,trace2,trace3,trace4])
     fig.update_layout( 
-        template="plotly_dark",       
+        template="plotly_dark",    
+        hovermode='x',
+        legend_title='',
+        title = {
+            'text': count_col+'\'s Trend',
+            'y': 0.97,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top',
+        },   
         **default_layout
     )
     return fig
@@ -94,8 +103,81 @@ def get_bar_plot2(covid_df,Country='Kenya'):
 
     fig = go.Figure(data=[trace1,trace2,trace3,trace4])
     fig.update_layout(
-        selectdirection='v',
-        template="ggplot2",   
+        hovermode='x',
+        legend_title='',
+        title={
+            'text': Country+'\'s Cases',
+            'y': 0.97,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top',
+        },
+        template="plotly_dark",   
         **default_layout
+    )
+    return fig
+
+def get_country_timeseries_new(covid_df, count_col='Algeria'):
+    df = covid_df[covid_df['Country/Region'] == count_col]  
+    #'New cases', 'New deaths', 'New recovered'  
+    trace1 = go.Scatter(x = df['Date'],  y = df['New confirmed'].values, name='New Confirmed')
+    trace2 = go.Scatter(x = df['Date'],  y = df['New deaths'].values, name='New Deaths')
+    trace3 = go.Scatter(x =df['Date'],  y = df['New recovered'].values, name='New Recovered')
+    fig = go.Figure(data=[trace1,trace2,trace3])
+    fig.update_layout( 
+        template="plotly_dark",  
+        hovermode='x',
+        legend_title='',
+        title={
+            'text': count_col+'\'s New Daily Cases',
+            'y': 0.97,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top',
+        },
+        **default_layout
+    )
+    return fig
+
+def total_timeseries(covid_df, country=None, per_capita=False):
+    title = country if country else 'Overall COVID-19 Africa Cases'
+    covid_df = covid_df.assign(Date=covid_df['Date'].astype(np.datetime64))    
+    df = covid_df[covid_df['Confirmed'] > 0] \
+        .groupby(['Date']).sum() \
+        .reset_index() \
+        .melt(id_vars='Date',
+              value_vars=[
+                  'Confirmed',
+                  'Recovered',
+                  'Active',
+                  'Deaths'
+              ]) \
+        .sort_values('Date')
+    fig = px.line(
+        df,
+        x='Date',
+        y='value',
+        labels={
+            'Date': 'Date',
+            'value': 'Count',
+        },
+        color='variable',
+        line_shape='spline',
+        render_mode='svg',
+        title=title,
+        template='plotly_dark',
+        color_discrete_sequence=plot_palette,
+    )
+    fig.update_layout(
+        hovermode='x',
+        legend_title='',
+        title={
+            'text': title,
+            'y': 0.97,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top',
+        },
+        **default_layout,
     )
     return fig

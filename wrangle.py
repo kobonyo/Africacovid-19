@@ -69,11 +69,9 @@ def wrangle_data(covid_df, pop_df):
                             + '-' + np.power(10, covid_df['log10']).astype(np.int).astype(str)
     covid_df['Description'] = covid_df['State'] + ', ' \
                               + covid_df['Country'] + ', ' \
-                              + covid_df['Continent'] + '<br>' \
                               + 'Confirmed: ' + covid_df['Confirmed'].astype(str) + '<br>' \
-                              + 'Confirmed Per Capita: ' + covid_df['ConfirmedPerCapita'].astype(str) + '<br>' \
                               + 'Recovered: ' + covid_df['Recovered'].astype(str) + '<br>' \
                               + 'Active: ' + covid_df['Active'].astype(str) + '<br>' \
-                              + 'Deaths: ' + covid_df['Deaths'].astype(str) + '<br>' \
-                              + 'Confirmed Range: ' + covid_df['log_group'].astype(str) + '<br>'
+                              + 'Deaths: ' + covid_df['Deaths'].astype(str) + '<br>' 
+                              
     return covid_df

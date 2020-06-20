@@ -17,8 +17,9 @@ server = app.server
 app.index_string = open('index.html', 'r').read()
 
 
-app.layout = dbc.Container([
-                           line,
+app.layout = dbc.Container([line,
+                           #cards,
+                           #line,
                            #dbc.Row([dbc.Col(card, md=8)]),
                            dbc.Row(dbc.Col(html.Div(card))),
                            dbc.Row([bar_plots,country_time_series]),                           
@@ -78,8 +79,10 @@ if __name__ != "__main__":
 
 if __name__ == '__main__':
     app.run_server(debug=True,port=5000,host='0.0.0.0')
-
+    
 '''
+
 if __name__ == '__main__':
     app.run_server(debug=True,port=5000,host='127.0.0.1')
+
 '''

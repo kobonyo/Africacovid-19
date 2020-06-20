@@ -137,6 +137,49 @@ nav = dbc.Nav(
     ]
 )
 
+def card_content(b,t):
+    return[dbc.CardBody([
+            html.H4(t, className="card-title"),
+            html.H1(b, className="card-text"),
+        ]
+    ),
+    ]
+
+def total_cases(df):  
+    df = covid_df[covid_df['Confirmed'] > 0] \
+    .groupby(['Date']).sum() \
+    .reset_index() \
+    .melt(id_vars='Date',
+            value_vars=[
+                'Confirmed',
+                'Recovered',
+                'Active',
+                'Deaths'
+            ]).sort_values('Date') 
+    print(df)
+    return 0
+
+
+c,a,d,r = 0,0,0,0
+
+#total_cases(full_grouped_df)
+
+cards = html.Div(
+    [
+        dbc.Row(
+            [
+                dbc.Col(dbc.Card(card_content(c,"Confirmed"),color="info"),md=3),
+                dbc.Col(dbc.Card(card_content(r,"Recovered"), color="success"),md=3),
+                dbc.Col(dbc.Card(card_content(d,"Daths"), color="danger", inverse=True),md=3),
+                dbc.Col(dbc.Card(card_content(a,"Active"), color="warning", inverse=True),md=3)                
+                
+            ]
+                      
+        ),
+ 
+    ]
+)
+
 line = html.Hr()
 
 map_graph = dbc.Col(get_graph(
